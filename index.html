@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Diagnóstico do Usuário</title>
+
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: #111;
+            color: #00ff88;
+            font-family: monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .terminal {
+            width: 90%;
+            max-width: 600px;
+        }
+
+        h1 {
+            font-size: 25px;
+        }
+
+        p {
+            font-size: 17px;
+        }
+
+        button {
+            background: transparent;
+            color: #00ff88;
+            border: 1px solid #00ff88;
+            padding: 12px 25px;
+            margin: 10px;
+            font-family: monospace;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        #nao {
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="terminal">
+
+        <h1>DIAGNÓSTICO DO USUÁRIO</h1>
+
+        <p>Usuário identificado: Luís</p>
+
+        <p>Deseja continuar?</p>
+
+        <button onclick="sim()">SIM</button>
+
+        <button id="nao">NÃO</button>
+
+    </div>
+
+    <script>
+
+        const botaoNao = document.getElementById("nao");
+
+        function fugir() {
+
+            const x = Math.random() * (window.innerWidth - 130);
+            const y = Math.random() * (window.innerHeight - 70);
+
+            botaoNao.style.position = "fixed";
+            botaoNao.style.left = x + "px";
+            botaoNao.style.top = y + "px";
+        }
+
+        botaoNao.addEventListener("mouseover", fugir);
+        botaoNao.addEventListener("touchstart", fugir);
+
+        function sim() {
+
+            document.querySelector(".terminal").innerHTML = `
+
+                <h1>ACCESS GRANTED</h1>
+
+                <p>Parabéns, Luís.</p>
+
+                <p>Você clicou.</p>
+
+                <br>
+
+                <p>
+                    ERROR 404:<br>
+                    explicação para Anne ter feito isso não encontrada.
+                </p>
+
+            `;
+        }
+
+    </script>
+
+</body>
+
+</html>
