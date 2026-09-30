@@ -1,305 +1,233 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<script>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+let perguntaAtual = 0;
+let tentativas = 0;
 
-    <title>Diagnóstico do Usuário</title>
+const perguntas = [
 
-    <style>
+    "Você costuma tomar decisões por impulso?",
 
-        * {
-            box-sizing: border-box;
-        }
+    "Você costuma se meter em situações que sabe que podem dar problema?",
 
-        body {
-            margin: 0;
-            min-height: 100vh;
-            background: #111;
-            color: #00ff88;
-            font-family: monospace;
+    "Você considera que curiosidade é uma justificativa válida para continuar?"
 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            overflow: hidden;
-        }
-
-        .terminal {
-            width: 90%;
-            max-width: 650px;
-            text-align: center;
-        }
-
-        .status {
-            font-size: 13px;
-            opacity: 0.7;
-            margin-bottom: 25px;
-        }
-
-        h1 {
-            font-size: 24px;
-            margin-bottom: 30px;
-        }
-
-        p {
-            font-size: 17px;
-            line-height: 1.6;
-        }
-
-        .pergunta {
-            font-size: 20px;
-            margin: 30px 0;
-        }
-
-        button {
-            background: transparent;
-            color: #00ff88;
-
-            border: 1px solid #00ff88;
-            border-radius: 5px;
-
-            padding: 12px 25px;
-            margin: 8px;
-
-            font-family: monospace;
-            font-size: 16px;
-
-            cursor: pointer;
-
-            transition: 0.15s;
-        }
-
-        button:hover {
-            background: #00ff88;
-            color: #111;
-        }
-
-        .resultado {
-            margin-top: 30px;
-            min-height: 30px;
-        }
-
-        .final {
-            font-size: 18px;
-            line-height: 1.8;
-        }
-
-        .erro {
-            margin-top: 35px;
-            font-size: 14px;
-            opacity: 0.7;
-        }
-
-        #naoFinal {
-            position: relative;
-        }
-
-    </style>
-
-</head>
+];
 
 
-<body>
+function proximaPergunta() {
 
-    <div class="terminal" id="terminal">
+    if (perguntaAtual < perguntas.length) {
+
+        document.getElementById("terminal").innerHTML = `
+
+            <div class="status">
+                ANALISANDO COMPORTAMENTO...
+            </div>
+
+            <h1>PERGUNTA ${perguntaAtual + 1}/3</h1>
+
+            <div class="pergunta">
+                ${perguntas[perguntaAtual]}
+            </div>
+
+            <button onclick="responder()">
+                SIM
+            </button>
+
+            <button onclick="responder()">
+                NÃO
+            </button>
+
+        `;
+
+        perguntaAtual++;
+
+    } else {
+
+        perguntaFinal();
+
+    }
+
+}
+
+
+function responder() {
+
+    const terminal = document.getElementById("terminal");
+
+    terminal.innerHTML = `
 
         <div class="status">
-            SISTEMA DE DIAGNÓSTICO v1.0
+            PROCESSANDO RESPOSTA...
         </div>
 
-        <h1>INICIANDO ANÁLISE...</h1>
+        <h1>ANÁLISE EM ANDAMENTO</h1>
 
         <p>
-            Algumas perguntas serão necessárias
-            para concluir a análise.
+            Resposta registrada.
         </p>
 
-        <div class="pergunta">
-            Você está disposto a continuar?
+        <p>
+            Analisando padrão de comportamento...
+        </p>
+
+    `;
+
+    setTimeout(() => {
+
+        if (perguntaAtual === perguntas.length) {
+
+            terminal.innerHTML += `
+
+                <p>
+                    Resultado: inconclusivo.
+                </p>
+
+                <p>
+                    Uma última pergunta será necessária.
+                </p>
+
+                <button onclick="perguntaFinal()">
+                    CONTINUAR
+                </button>
+
+            `;
+
+        } else {
+
+            proximaPergunta();
+
+        }
+
+    }, 1200);
+
+}
+
+
+function perguntaFinal() {
+
+    document.getElementById("terminal").innerHTML = `
+
+        <div class="status">
+            ANÁLISE FINAL
         </div>
 
-        <button onclick="proximaPergunta()">
+        <h1>UMA ÚLTIMA PERGUNTA</h1>
+
+        <div class="pergunta">
+
+            Você costuma fugir quando
+            uma situação fica interessante?
+
+        </div>
+
+        <button onclick="finalSim()">
             SIM
         </button>
 
-        <button onclick="proximaPergunta()">
+        <button id="naoFinal">
             NÃO
         </button>
 
-    </div>
+    `;
 
+    const botaoNao = document.getElementById("naoFinal");
 
-    <script>
+    botaoNao.addEventListener("pointerenter", fugir);
+    botaoNao.addEventListener("pointerdown", fugir);
 
-        let perguntaAtual = 0;
+}
 
-        const perguntas = [
 
-            "Você costuma tomar decisões por impulso?",
+function fugir(event) {
 
-            "Você costuma se meter em situações que sabe que podem dar problema?",
+    if (event) {
+        event.preventDefault();
+    }
 
-            "Você considera que curiosidade é uma justificativa válida para continuar?"
+    tentativas++;
 
-        ];
+    const botao = document.getElementById("naoFinal");
 
+    const largura = window.innerWidth - botao.offsetWidth - 20;
+    const altura = window.innerHeight - botao.offsetHeight - 20;
 
-        function proximaPergunta() {
+    const x = Math.max(10, Math.random() * largura);
+    const y = Math.max(10, Math.random() * altura);
 
-            if (perguntaAtual < perguntas.length) {
+    botao.style.position = "fixed";
+    botao.style.left = x + "px";
+    botao.style.top = y + "px";
 
-                document.getElementById("terminal").innerHTML = `
 
-                    <div class="status">
-                        ANALISANDO COMPORTAMENTO...
-                    </div>
+    const mensagens = [
 
-                    <h1>PERGUNTA ${perguntaAtual + 1}/3</h1>
+        "Resposta recusada.",
 
-                    <div class="pergunta">
-                        ${perguntas[perguntaAtual]}
-                    </div>
+        "O sistema detectou hesitação.",
 
-                    <button onclick="responder()">
-                        SIM
-                    </button>
+        "Luís.",
 
-                    <button onclick="responder()">
-                        NÃO
-                    </button>
+        "Isso está ficando constrangedor.",
 
-                    <div class="resultado" id="resultado"></div>
+        "Você pode parar de tentar.",
 
-                `;
+        "O botão já tomou uma decisão por você."
 
-                perguntaAtual++;
+    ];
 
-            } else {
 
-                perguntaFinal();
+    const terminal = document.getElementById("terminal");
 
-            }
+    let mensagem = mensagens[
+        Math.min(tentativas - 1, mensagens.length - 1)
+    ];
 
-        }
 
+    let aviso = document.getElementById("avisoFuga");
 
-        function responder() {
+    if (!aviso) {
 
-            const terminal = document.getElementById("terminal");
+        aviso = document.createElement("div");
 
-            terminal.innerHTML = `
+        aviso.id = "avisoFuga";
+        aviso.className = "erro";
 
-                <div class="status">
-                    PROCESSANDO RESPOSTA...
-                </div>
+        terminal.appendChild(aviso);
 
-                <h1>ANÁLISE EM ANDAMENTO</h1>
+    }
 
-                <p>
-                    Resposta registrada.
-                </p>
+    aviso.textContent = mensagem;
 
-                <p>
-                    Analisando padrão de comportamento...
-                </p>
+}
 
-            `;
 
-            setTimeout(() => {
+function finalSim() {
 
-                if (perguntaAtual === perguntas.length) {
+    document.getElementById("terminal").innerHTML = `
 
-                    terminal.innerHTML += `
+        <div class="status">
+            DIAGNÓSTICO CONCLUÍDO
+        </div>
 
-                        <p>
-                            Resultado: inconclusivo.
-                        </p>
+        <h1>RESULTADO</h1>
 
-                        <p>
-                            Uma última pergunta será necessária.
-                        </p>
+        <div class="final">
 
-                        <button onclick="perguntaFinal()">
-                            CONTINUAR
-                        </button>
+            Interessante.
 
-                    `;
+            <br><br>
 
-                } else {
+            Nao sou a unica escolhendo o caminho mais difícil.
 
-                    proximaPergunta();
+        </div>
 
-                }
+        <div class="erro">
+            SISTEMA ENCERRADO.
+        </div>
 
-            }, 1200);
+    `;
 
-        }
+}
 
-
-        function perguntaFinal() {
-
-            document.getElementById("terminal").innerHTML = `
-
-                <div class="status">
-                    ANÁLISE FINAL
-                </div>
-
-                <h1>UMA ÚLTIMA PERGUNTA</h1>
-
-                <div class="pergunta">
-
-                    Você costuma fugir quando
-                    uma situação fica interessante?
-
-                </div>
-
-                <button onclick="finalSim()">
-                    SIM
-                </button>
-
-                <button id="naoFinal">
-                    NÃO
-                </button>
-
-            `;
-
-            const botaoNao = document.getElementById("naoFinal");
-
-            botaoNao.addEventListener("mouseover", fugir);
-            botaoNao.addEventListener("touchstart", fugir);
-
-        }
-
-
-        let tentativas = 0;
-
-
-        function fugir() {
-
-            tentativas++;
-
-            const botao = document.getElementById("naoFinal");
-
-            const largura = window.innerWidth - botao.offsetWidth - 20;
-            const altura = window.innerHeight - botao.offsetHeight - 20;
-
-            const x = Math.max(10, Math.random() * largura);
-            const y = Math.max(10, Math.random() * altura);
-
-            botao.style.position = "fixed";
-            botao.style.left = x + "px";
-            botao.style.top = y + "px";
-
-
-            const mensagens = [
-
-                "Resposta recusada.",
-
-                "O sistema detectou hesitação.",
-
-                "Luís.",
-
-               
+</script>
