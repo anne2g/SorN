@@ -365,8 +365,7 @@
 
         }
 
-
-        function diagnosticoDetectado() {
+function diagnosticoDetectado() {
 
     const terminal = document.getElementById("terminal");
 
@@ -401,24 +400,41 @@
 
                 Você 🫵🏻 é curioso!
 
-                <br><br>
-
-                E acaba de perder preciosos minutos
-                do seu trabalho.
-
-            </div>
-
-            <div class="erro">
-
-                SISTEMA ENCERRADO.
-
             </div>
 
         `;
 
+
+        setTimeout(() => {
+
+            terminal.innerHTML = `
+
+                <div class="status">
+                    PROCESSAMENTO CONCLUÍDO
+                </div>
+
+                <h1>DIAGNÓSTICO DETECTADO</h1>
+
+                <div class="final">
+
+                    E acaba de perder preciosos minutos
+                    do seu trabalho.
+
+                </div>
+
+                <div class="erro">
+
+                    SISTEMA ENCERRADO.
+
+                </div>
+
+            `;
+
+        }, 2000);
+
     }, 2000);
 
-        }
+}
     </script>
 
 </body>
