@@ -368,43 +368,54 @@
 
         function diagnosticoDetectado() {
 
-            const terminal =
-                document.getElementById("terminal");
+    const terminal = document.getElementById("terminal");
 
-            terminal.innerHTML = `
+    terminal.innerHTML = `
 
-                <div class="status">
-                    PROCESSAMENTO CONCLUÍDO
-                </div>
+        <div class="status">
+            PROCESSAMENTO CONCLUÍDO
+        </div>
 
-                <h1>DIAGNÓSTICO DETECTADO</h1>
+        <h1>DIAGNÓSTICO DETECTADO</h1>
 
-                <div class="final">
+        <div class="final">
 
-                    Parabéns!
+            Parabéns!
 
-                    </div>
+        </div>
 
-                    Você 🫵🏻 é curioso!
+    `;
 
-                    <br><br>
 
-                    E acaba de perder precisos minutos do seu trabalho.
+    setTimeout(() => {
 
-                </div>
+        terminal.innerHTML = `
 
-                <div class="erro">
+            <div class="status">
+                PROCESSAMENTO CONCLUÍDO
+            </div>
 
-                    SISTEMA ENCERRADO.
+            <h1>DIAGNÓSTICO DETECTADO</h1>
 
-                </div>
+            <div class="final">
 
-            `;
+                Você 🫵🏻 é curioso!
+
+                <br><br>
+
+                E acaba de perder preciosos minutos
+                do seu trabalho.
+
+            </div>
+
+            <div class="erro">
+
+                SISTEMA ENCERRADO.
+
+            </div>
+
+        `;
+
+    }, 2000);
 
         }
-
-    </script>
-
-</body>
-
-</html>
