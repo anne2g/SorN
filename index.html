@@ -35,7 +35,7 @@
 
         .status {
             font-size: 13px;
-            opacity: 0.7;
+            opacity: 0.6;
             margin-bottom: 25px;
         }
 
@@ -51,6 +51,7 @@
 
         .pergunta {
             font-size: 20px;
+            line-height: 1.5;
             margin: 30px 0;
         }
 
@@ -83,14 +84,14 @@
         }
 
         .final {
-            font-size: 18px;
+            font-size: 19px;
             line-height: 1.8;
         }
 
         .erro {
-            margin-top: 35px;
+            margin-top: 30px;
             font-size: 14px;
-            opacity: 0.7;
+            opacity: 0.65;
         }
 
         #naoFinal {
@@ -113,19 +114,20 @@
         <h1>INICIANDO ANÁLISE...</h1>
 
         <p>
-            Algumas perguntas serão necessárias
-            para concluir a análise.
+            Um breve diagnóstico será realizado.
+            <br>
+            Algumas respostas serão necessárias.
         </p>
 
         <div class="pergunta">
             Você está disposto a continuar?
         </div>
 
-        <button onclick="proximaPergunta()">
+        <button onclick="iniciarDiagnostico()">
             SIM
         </button>
 
-        <button onclick="proximaPergunta()">
+        <button onclick="iniciarDiagnostico()">
             NÃO
         </button>
 
@@ -135,53 +137,54 @@
     <script>
 
         let perguntaAtual = 0;
+        let tentativas = 0;
 
         const perguntas = [
 
+            "Você você se considera uma pessoa inteligente?",
             "Você costuma tomar decisões por impulso?",
 
-            "Você costuma se meter em situações que sabe que podem dar problema?",
+            "Quando existe um caminho fácil e um caminho difícil, você costuma escolher o difícil?",
 
-            "Você considera que curiosidade é uma justificativa válida para continuar?"
+            "Você considera curiosidade uma justificativa válida para continuar?"
 
         ];
 
 
-        function proximaPergunta() {
+        function iniciarDiagnostico() {
 
-            if (perguntaAtual < perguntas.length) {
+            perguntaAtual = 0;
 
-                document.getElementById("terminal").innerHTML = `
+            mostrarPergunta();
 
-                    <div class="status">
-                        ANALISANDO COMPORTAMENTO...
-                    </div>
+        }
 
-                    <h1>PERGUNTA ${perguntaAtual + 1}/3</h1>
 
-                    <div class="pergunta">
-                        ${perguntas[perguntaAtual]}
-                    </div>
+        function mostrarPergunta() {
 
-                    <button onclick="responder()">
-                        SIM
-                    </button>
+            const terminal = document.getElementById("terminal");
 
-                    <button onclick="responder()">
-                        NÃO
-                    </button>
+            terminal.innerHTML = `
 
-                    <div class="resultado" id="resultado"></div>
+                <div class="status">
+                    ANALISANDO COMPORTAMENTO...
+                </div>
 
-                `;
+                <h1>PERGUNTA ${perguntaAtual + 1}/${perguntas.length}</h1>
 
-                perguntaAtual++;
+                <div class="pergunta">
+                    ${perguntas[perguntaAtual]}
+                </div>
 
-            } else {
+                <button onclick="responder()">
+                    SIM
+                </button>
 
-                perguntaFinal();
+                <button onclick="responder()">
+                    NÃO
+                </button>
 
-            }
+            `;
 
         }
 
@@ -210,44 +213,64 @@
 
             setTimeout(() => {
 
-                if (perguntaAtual === perguntas.length) {
+                perguntaAtual++;
 
-                    terminal.innerHTML += `
+                if (perguntaAtual < perguntas.length) {
 
-                        <p>
-                            Resultado: inconclusivo.
-                        </p>
-
-                        <p>
-                            Uma última pergunta será necessária.
-                        </p>
-
-                        <button onclick="perguntaFinal()">
-                            CONTINUAR
-                        </button>
-
-                    `;
+                    mostrarPergunta();
 
                 } else {
 
-                    proximaPergunta();
+                    mostrarAnaliseFinal();
 
                 }
 
-            }, 1200);
+            }, 1000);
+
+        }
+
+
+        function mostrarAnaliseFinal() {
+
+            const terminal = document.getElementById("terminal");
+
+            terminal.innerHTML = `
+
+                <div class="status">
+                    ANÁLISE CONCLUÍDA
+                </div>
+
+                <h1>RESULTADO INCONCLUSIVO</h1>
+
+                <p>
+                    O sistema identificou um padrão
+                    de comportamento curioso.
+                </p>
+
+                <p>
+                    Uma última verificação será necessária.
+                </p>
+
+                <button onclick="perguntaFinal()">
+                    CONTINUAR
+                </button>
+
+            `;
 
         }
 
 
         function perguntaFinal() {
 
-            document.getElementById("terminal").innerHTML = `
+            const terminal = document.getElementById("terminal");
+
+            terminal.innerHTML = `
 
                 <div class="status">
-                    ANÁLISE FINAL
+                    ÚLTIMA VERIFICAÇÃO
                 </div>
 
-                <h1>UMA ÚLTIMA PERGUNTA</h1>
+                <h1>PERGUNTA FINAL</h1>
 
                 <div class="pergunta">
 
@@ -256,7 +279,7 @@
 
                 </div>
 
-                <button onclick="finalSim()">
+                <button onclick="diagnosticoDetectado()">
                     SIM
                 </button>
 
@@ -268,26 +291,31 @@
 
             const botaoNao = document.getElementById("naoFinal");
 
-            botaoNao.addEventListener("mouseover", fugir);
-            botaoNao.addEventListener("touchstart", fugir);
+            botaoNao.addEventListener("pointerenter", fugir);
+            botaoNao.addEventListener("pointerdown", fugir);
 
         }
 
 
-        let tentativas = 0;
+        function fugir(event) {
 
-
-        function fugir() {
+            event.preventDefault();
 
             tentativas++;
 
             const botao = document.getElementById("naoFinal");
 
-            const largura = window.innerWidth - botao.offsetWidth - 20;
-            const altura = window.innerHeight - botao.offsetHeight - 20;
+            const largura =
+                window.innerWidth - botao.offsetWidth - 20;
 
-            const x = Math.max(10, Math.random() * largura);
-            const y = Math.max(10, Math.random() * altura);
+            const altura =
+                window.innerHeight - botao.offsetHeight - 20;
+
+            const x =
+                Math.max(10, Math.random() * largura);
+
+            const y =
+                Math.max(10, Math.random() * altura);
 
             botao.style.position = "fixed";
             botao.style.left = x + "px";
@@ -300,6 +328,83 @@
 
                 "O sistema detectou hesitação.",
 
-                "Luís.",
+                "Tentativa registrada.",
 
-               
+                "Interessante escolha.",
+
+                "Por que esta sendo teimoso?",
+
+                "Isso está ficando suspeito."
+
+            ];
+
+
+            let aviso =
+                document.getElementById("aviso");
+
+            if (!aviso) {
+
+                aviso = document.createElement("div");
+
+                aviso.id = "aviso";
+                aviso.className = "erro";
+
+                document.getElementById("terminal")
+                    .appendChild(aviso);
+
+            }
+
+
+            aviso.textContent =
+                mensagens[
+                    Math.min(
+                        tentativas - 1,
+                        mensagens.length - 1
+                    )
+                ];
+
+        }
+
+
+        function diagnosticoDetectado() {
+
+            const terminal =
+                document.getElementById("terminal");
+
+            terminal.innerHTML = `
+
+                <div class="status">
+                    PROCESSAMENTO CONCLUÍDO
+                </div>
+
+                <h1>DIAGNÓSTICO DETECTADO</h1>
+
+                <div class="final">
+
+                    Parabéns!
+
+                    </div>
+
+                    Você 🫵🏻 é curioso!
+
+                    <br><br>
+
+                    E acaba de perder precisos minutos do seu trabalho.
+
+                </div>
+
+                <div class="erro">
+
+                    SISTEMA ENCERRADO.
+
+                </div>
+
+            `;
+
+        }
+
+    </script>
+
+</body>
+
+</html>
